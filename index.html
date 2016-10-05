@@ -90,7 +90,7 @@ jQuery(function() {
 
             $.each( data.results, function( i, item ) {
                 style = ((i%2) == 0)?"articaljoblistinggray":"articaljoblistingwhite"
-                result = result + '<a target="_blank" href="'+item.url+'"><li class="articaljoblisting '+style+'" style="margin-bottom:3px;">'+item.jobtitle+'<br /><span style="color:black;">'+item.source+' - '+item.formattedLocation+' - 'item.formattedRelativeTime+'</span></li></a>';
+                result = result + '<a target="_blank" href="'+item.url+'"><li class="articaljoblisting '+style+'" style="margin-bottom:3px;">'+item.jobtitle+'<br /><span style="color:black;">'+item.source+' - '+item.formattedLocation+' - '+item.formattedRelativeTime+'</span></li></a>';
                 i++;
                 url = item.url;
             });
