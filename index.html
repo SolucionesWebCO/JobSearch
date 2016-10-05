@@ -31,7 +31,7 @@ jQuery(function() {
 
     var location, country, limit = 10;
     $.get("http://ip-api.com/json/", function (response) {
-        country = response.country;
+        country = response.countryCode;
     }, "jsonp");
 
     $( "#searchResult" ).click(function() {
