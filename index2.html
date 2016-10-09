@@ -13,6 +13,7 @@
       <!-- Le styles -->
       <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
       <link href="http://www.marcellop.com/bootplus/assets/css/bootplus.css" rel="stylesheet">
+      <script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
       <style type="text/css">
       body {
         padding-top: 20px;
@@ -85,11 +86,15 @@
         <h1>Super awesome marketing speak!</h1>
         <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
         <a class="btn btn-large btn-success" href="#">Sign up today</a>
+                <input class="jobname" id="jobname" type="text" value="" name="jobname">
+                <input class="location" id="location" type="text" value="" name="location">
+                <input type="submit" id="searchResult" value="Find Jobs" class="">
       </div>
 
       <hr>
 
       <div class="row-fluid marketing">
+         <div id="jobs-data"></div>
         <div class="span6">
           <h4>Subheading</h4>
           <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
@@ -120,7 +125,62 @@
       </div>
 
     </div> <!-- /container -->
+           }
+        else {
+            domain = url.split('/')[0];
+        }
 
+        //find & remove port number
+        domain = domain.split(':')[0];
+
+        return domain;
+    };
+    function jobSearch(location,data,country,start,end){
+        var serachData  =data;
+        $.ajax({
+            cache: false,
+            data: $.extend({
+                publisher: '7778623931867371',
+                v: '2',
+                format: 'json',
+                q: data,
+                l: location,
+                radius: 50,
+                limit:limit,
+                sort: 'date',
+                highlight: 1,
+                filter: 1,
+                latlong: 1,
+                co: country.toLowerCase(),
+                userip: '',
+                useragent: ''
+            }, { start: start, end: end }),
+            dataType: 'jsonp',
+            type: 'GET',
+            timeout: 5000,
+            url: 'http://api.indeed.com/ads/apisearch'
+        })
+        .done(function( data ) {
+            var result="",pagination = "",i=2,style,url, paginationLimit = Math.ceil((data.totalResults)/limit);
+
+            $.each( data.results, function( i, item ) {
+                style = ((i%2) == 0)?"articaljoblistinggray":"articaljoblistingwhite"
+                result = result + '<a target="_blank" href="'+item.url+'"><li class="articaljoblisting '+style+'" style="margin-bottom:3px;">'+item.jobtitle+'<br /><span style="color:black;">'+item.source+' - '+item.formattedLocation+' - '+item.formattedRelativeTime+'</span></li></a>';
+                i++;
+                url = item.url;
+            });
+            
+            for (i = 1; i <= paginationLimit; i++) {
+                pagination = pagination + '<li>'+i+'</li>';
+            }
+
+            $('#jobs-data').html('<ul style="list-style: none;margin: 0;padding:0;">'+result+'</ul><a style="float: right;" target="_blank" href="http://'+extractDomain(url)+'/jobs?q='+serachData+'&l='+location+'">Find more jobs</a>');
+            $('#pagination').html('<ul class="pagination" style="list-style: none;margin: 0;padding:0;">'+pagination+'</ul>');
+        });
+    };
+});
+
+</script>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
