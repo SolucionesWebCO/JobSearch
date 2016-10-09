@@ -125,7 +125,34 @@
       </div>
 
     </div> <!-- /container -->
-           }
+
+      
+      <script>
+jQuery(function() {
+
+
+    var location, country, limit = 10;
+    $.get("http://ip-api.com/json/", function (response) {
+        country = response.countryCode;
+    }, "jsonp");
+
+    $( "#searchResult" ).click(function() {
+        jobSearch($('#location').val(),$('#jobname').val(),country,0,limit);
+    });
+    
+    var resultLinks = $('body').find('#pagination');
+
+    resultLinks.on('click', 'li', function (e) {
+        var start = ($(this).text() - 1) * limit, end = start + limit;
+        jobSearch($('#location').val(),$('#jobname').val(),country,start,end);
+    });
+
+    function extractDomain(url) {
+        var domain;
+        //find & remove protocol (http, ftp, etc.) and get domain
+        if (url.indexOf("://") > -1) {
+            domain = url.split('/')[2];
+        }
         else {
             domain = url.split('/')[0];
         }
@@ -181,6 +208,7 @@
 });
 
 </script>
+      
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
